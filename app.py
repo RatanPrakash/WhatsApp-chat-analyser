@@ -46,8 +46,6 @@ if uploaded_file is not None:
 
     with st.expander('View word cloud and most common words'):
         st.pyplot(preprocessor.word_cloud(df, selected_user))
-
-    with st.expander('Most common words'):
         st.write('Most common words')
         temp_df, plot = preprocessor.most_common_words(selected_user, df)
         st.write(temp_df)
