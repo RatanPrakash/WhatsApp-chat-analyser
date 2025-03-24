@@ -1,3 +1,5 @@
 WhatsApp*
 /chat-analyser/*
 chat-analyser
+.DS_Store
+__pycache__
