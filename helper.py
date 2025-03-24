@@ -43,7 +43,6 @@ def preprocess_data(chat_data):
     df.sample(20)
     return df
 
-
 def fetch_stats(selected_user, df):
     if selected_user == 'All':
         user_df = df
@@ -149,6 +148,7 @@ def monthly_timeline(selected_user, df):
 
     fig, ax = plt.subplots(figsize=(10, 5))
     ax.plot(monthly_timeline['month_year'], monthly_timeline['message'])
+    plt.xticks(rotation=45)
     ax.set_title('Messages sent over Months')
     ax.set_xlabel('Month-Year')
     ax.set_ylabel('Total messages')
@@ -228,3 +228,22 @@ def activity_heatmap(selected_user, df):
     plt.xlabel('Hour of Day')
     plt.ylabel('Day of Week')
     return plt
+
+def extract_links(df):
+    links = df[df['message'].str.contains('http', na=False)]
+    links = links['message'].str.extractall(r'(https?://\S+)')[0]
+    return links.reset_index(drop=True)
+
+def plot_common_domains(df):
+    links = extract_links(df)
+    domains = links.str.extract(r'https?://(?:www\.)?([^/]+)')[0]
+    domain_counts = domains.value_counts().reset_index()
+    domain_counts.columns = ['domain', 'count']
+    
+    fig, ax = plt.subplots(figsize=(15, 5))
+    ax.bar(domain_counts['domain'], domain_counts['count'], width=0.5)
+    plt.xticks(rotation='vertical')
+    ax.set_title('Most Common Domains')
+    ax.set_xlabel('Domain')
+    ax.set_ylabel('Count')
+    return domain_counts, fig
